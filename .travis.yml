@@ -1,0 +1,38 @@
+cache:
+  directories:
+  - "$GOPATH/pkg/mod"
+  - "$HOME/.cache/go-build"
+language: go
+go:
+- 1.15.x
+env:
+  matrix:
+  - GO111MODULE=on
+  global:
+  - secure: g6HzqNfDlXyiBMFL47Fr5+LgB9u9EetvKpCWjCpl1a8Kh98tW2wf9oYHsbCn3XLeXmJaEUIoRuimVvm7eKJzKekoTx7rM8fiSR0JfvSV1HL4ik7MAaj9VXupo7sPL9d7Lf9RkXDWRB9OLcyQPoxuD//KcuXFjKEgw+1QoyrHdffb5YMkyxu1Zl2Gkp6tJSKGzr+CDD0iVZ3OXPYjfeZgOtms5xDjvLpNCuZnhU4PgRKh0oZHDiZsFgkydziL5DPdYlIw0ouWBbj7ZoHcFg/Dibg4UlDFhffmUgUZgZjwg+huEHgI/3Vs75A+QsQwGlmYyXQreqkxGHJG5c28IZr/gsei7Fj51s1QspgoV3FRksH3Tg/Vfwqu8oBJhRMIiIzddRvb5nYbSjmgmg0TGkLaBFw72szkdIAzyj6cO3371bFM1LanUEJ0FlAlD/z+KTYJWvRv76oZ4zmCYDRR3b0GLwYslzvZDjCSljzNk+gZIYt1AbE5burm+Rf1To3uk9s7tPWZ6gsW7KWA+AqEBm3c2Oio4BJowyGWvjNzjHoFcKP27OD5z5Meo12rS7Yg/2J594IlBOAsJ0ebWBnkai5YnC9fqZ71PL0+ilMabUV9FyDuU8D2tFQDc5b2rLL7DAPECY7MJyRANtDzTzOze7OAc1sBrXRZzV6/ugPxnxB6TQQ=
+  - secure: CE/SM8Gp+fUlETcjK2fWO6b+xK7tMaFaXsgo7Md4DvUfaC/0TLkgQJlR3N7ipxzOg1j6Y15r/Pw2Uxbj2qH0undn/P3mofiApbox8SBPXeAyJe7DLlm37/JVm+M5eU+SIFD3oIp6anGuysztJQPisfVXp7W2ZWyfIQTjV3bg3l50j1V3RHDe9liZ3jQJkrvI796gooR3sfJBPeDdNuSKsO6opPG8dxuX7RH6EsdzL6yv8ozJPql9vP6cOfVHpCp8ird91iGnhc36sStxeBEQsBjoivQGW1aq0szRa+kI4sL6AyldCfYnF0EMCRnM3v7xbxdEEIIBW7Vum3dsg75FDDmKKdI+lu1mcca9x6OM8JMR05I6L4KnVZ3SoPgLVqDtQr7awycQqOognBX0BwaRhdW3FVF+/V1ZDR1km04C4HCCcTOhyNqIIhh9wxk67HYGs5lIdh97PAyiOF96SgGuodcAVNOj3keCu6MSxmjfeHLUTp8ajIp332Jy5KYfQu1+ZleoUJA/xgiElicqNoeKreHZEIUjHJcdcdF0CAVKxZ327da7UzsfmuldQErr3Cczq1KTGtiLc+/6O1sYW9nNXYYTe6tp038MlK61dL5HBfsO50ooHSfO7ahznm73txZNXIDTKgcCOT2gpv6DJu81iP7TzEoJW3hrbo4sBfP1uRU=
+notifications:
+  email:
+    recipients:
+    - newfarry@126.com
+    on_success: always
+addons:
+  apt:
+    packages:
+    - snapcraft
+services:
+- docker
+after_success:
+- docker login -u=openiothub -p="$DOCKER_PASSWORD"
+- snapcraft login --with snap.login
+- rm snap.login
+deploy:
+- provider: script
+  skip_cleanup: true
+  script: git checkout . && curl -sL https://git.io/goreleaser | bash
+  on:
+    tags: true
+    condition: "$TRAVIS_OS_NAME = linux"
+before_install:
+- openssl aes-256-cbc -K $encrypted_164ead62e292_key -iv $encrypted_164ead62e292_iv
+  -in snap.login.enc -out snap.login -d
