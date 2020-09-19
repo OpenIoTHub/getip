@@ -73,15 +73,6 @@ nfpms:
     formats:
       - deb
       - rpm
-    scripts:
-      preinstall: "scripts/install_remove/preinstall.sh"
-      postinstall: "scripts/install_remove/postinstall.sh"
-      preremove: "scripts/install_remove/preremove.sh"
-      postremove: "scripts/install_remove/postremove.sh"
-    files:
-      "systemd/**": "/etc/systemd/system"
-    config_files:
-      "getip.yaml": "/etc/getip/getip.yaml"
 snapcrafts:
   - name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}'
     name: publicip
